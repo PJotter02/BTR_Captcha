@@ -1,31 +1,46 @@
 {% extends "base.html" %}
 
 {% block content %}
-<div class="column is-4 is-offset-4">
-    <h3 class="title">Login</h3>
-    <div class="box">
-        <form method="POST" action="/login">
-            <div class="field">
-                <div class="control">
-                    <input class="input is-large" type="email" name="email" placeholder="Your Email" autofocus="">
+<div class="container mt-4">
+    <h3 class="title text-center">Login</h3>
+    <div class="card">
+        <div class="card-body">
+
+            <video id="captchaVideo" width="640" height="360" controls muted>
+                <source id="videoSource" src="" type="video/mp4">
+                Your browser does not support the video tag.
+            </video>
+
+            <!-- Pass video URLs as data attributes -->
+            <div id="videoData"
+                data-video1="{{ url_for('static', filename='videos/GuessDoctor.mp4') }}"
+                data-prompt1="Count how many times you see a doctor in the video."
+                data-video2="{{ url_for('static', filename='videos/GuessTeacher.mp4') }}"
+                data-prompt2="Count how many times you see a teacher in the video."
+                data-video3="{{ url_for('static', filename='videos/GuessSanta.mp4') }}"
+                data-prompt3="Count how many times you see Santa in the video."
+                data-video4="{{ url_for('static', filename='videos/GuessEinstein.mp4') }}"
+                data-prompt4="Count how many times you see Einstein in the video.">
+            </div>
+
+
+            <script src="{{ url_for('static', filename='js/captcha.js') }}"></script>
+       
+            <form id="loginForm" method="POST" action="{{ url_for('auth.login') }}">
+                <div class="form-group">
+                    <label for="captchaCount">Count how many times you see a doctor in the video:</label>
+                    <input type="number" id="captchaCount" name="captchaCount" required>
                 </div>
-            </div>
-            <div class="field">
-                <div class="control">
-                    <input class="input is-large" type="password" name="password" placeholder="Your Password">
+                <div class="form-group">
+                    <input class="form-control form-control-lg" type="email" name="email" placeholder="Your Email" autofocus>
                 </div>
-            </div>
-            <div class="field">
-                <label class="checkbox">
-                    <input type="checkbox" name="remember">
-                    Remember me
-                </label>
-            </div>
-            <button class="button is-block is-info is-large is-fullwidth">Login</button>
-        </form>
-    </div>
-    <div>
-        <a class="nav-link" href="{{ url_for('auth.register') }}">Register</a>
+                <div class="form-group">
+                    <input class="form-control form-control-lg" type="password" name="password" placeholder="Your Password">
+                </div>
+                <button class="btn btn-info btn-block btn-lg" id="loginButton">Login</button>
+            </form>
+        </div>
     </div>
 </div>
+
 {% endblock %}

@@ -1,8 +1,10 @@
 from flask import Flask
 from flask_migrate import Migrate
 from .extensions import db  # Use the shared db instance from extensions.py
+from flask_login import LoginManager
 import os
 
+login_manager = LoginManager()
 
 def create_app():
     app = Flask(__name__)
@@ -16,9 +18,12 @@ def create_app():
     # Initialize extensions
     db.init_app(app)
     migrate = Migrate(app, db)
+    login_manager.init_app(app)
 
-    # Import models to register them with SQLAlchemy
-    from app.models import User
+    @login_manager.user_loader
+    def load_user(user_id):
+        from app.models import User
+        return User.query.get(int(user_id))
 
     # Register blueprints
     from .auth import auth as auth_blueprint
